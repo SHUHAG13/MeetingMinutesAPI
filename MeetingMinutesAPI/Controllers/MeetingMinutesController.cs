@@ -33,6 +33,12 @@ namespace MeetingMinutesAPI.Controllers
                 MeetingTime = request.MeetingTime,
                 CorporateId = request.CustomerType == "Corporate" ? request.CustomerId : null,
                 IndividualId = request.CustomerType == "Individual" ? request.CustomerId : null,
+                MeetingPlace= request.MeetingPlace,
+                AttendsFromClient = request.AttendsFromClient,
+                AttendsFromHost = request.AttendsFromHost,
+                MeetingAgenda = request.MeetingAgenda,
+                MeetingDiscussion = request.MeetingDiscussion,
+                MeetingDecision= request.MeetingDecision,
                 Details = request.Details.Select(d => new MeetingMinutesDetails
                 {
                     ProductId = d.ProductId,
@@ -46,21 +52,5 @@ namespace MeetingMinutesAPI.Controllers
 
             return Ok(new { message = "Meeting Minutes saved successfully", masterId = master.MasterId });
         }
-
-
-
-        // GET api/meetingminutes/{id}
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetMeetingMinutes(int id)
-        {
-            var master = await _context.MeetingMinutesMasters
-                .Include(m => m.Details)
-                .FirstOrDefaultAsync(m => m.MasterId == id);
-
-            if (master == null) return NotFound();
-
-            return Ok(master);
-        }
-
     }
 }

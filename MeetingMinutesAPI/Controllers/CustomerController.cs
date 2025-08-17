@@ -20,10 +20,8 @@ namespace MeetingMinutesAPI.Controllers
         [HttpGet("corporate")]
         public async Task<IActionResult> GetCorporateCustomers()
         {
-            var corporates = await _context.CorporateCustomers
-                .AsNoTracking()
-                .Select(c => new { value = c.CorporateId, text = c.CorporateName })
-                .ToListAsync();
+
+            var corporates = await _context.CorporateCustomers.ToListAsync();
 
             return Ok(corporates);
         }
@@ -33,10 +31,8 @@ namespace MeetingMinutesAPI.Controllers
         [HttpGet("individual")]
         public async Task<IActionResult> GetIndividualCustomers()
         {
-            var individuals = await _context.IndividualCustomers
-                .AsNoTracking()
-                .Select(i => new { value = i.IndividualId, text = i.Name })
-                .ToListAsync();
+           
+            var individuals = await _context.IndividualCustomers.ToListAsync();
 
             return Ok(individuals);
         }
