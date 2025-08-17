@@ -1,4 +1,5 @@
 ﻿using MeetingMinutesAPI.Data;
+using MeetingMinutesAPI.Interfaces;
 using MeetingMinutesAPI.Models.DTOs;
 using MeetingMinutesAPI.Models.Entities;
 using Microsoft.AspNetCore.Http;
@@ -11,11 +12,11 @@ namespace MeetingMinutesAPI.Controllers
     [ApiController]
     public class MeetingMinutesController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IMeetingMinutesRepository _repository;
 
-        public MeetingMinutesController(AppDbContext context)
+        public MeetingMinutesController(IMeetingMinutesRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
 
@@ -26,31 +27,10 @@ namespace MeetingMinutesAPI.Controllers
             if (request == null || request.Details == null || !request.Details.Any())
                 return BadRequest("Invalid request");
 
-            var master = new MeetingMinutesMaster
-            {
-                CustomerType = request.CustomerType,
-                MeetingDate = request.MeetingDate,
-                MeetingTime = request.MeetingTime,
-                CorporateId = request.CustomerType == "Corporate" ? request.CustomerId : null,
-                IndividualId = request.CustomerType == "Individual" ? request.CustomerId : null,
-                MeetingPlace= request.MeetingPlace,
-                AttendsFromClient = request.AttendsFromClient,
-                AttendsFromHost = request.AttendsFromHost,
-                MeetingAgenda = request.MeetingAgenda,
-                MeetingDiscussion = request.MeetingDiscussion,
-                MeetingDecision= request.MeetingDecision,
-                Details = request.Details.Select(d => new MeetingMinutesDetails
-                {
-                    ProductId = d.ProductId,
-                    Quantity = d.Quantity,
-                    Unit = d.Unit
-                }).ToList()
-            };
+            var masterId = await _repository.SaveMeetingMinutesAsync(request);
 
-            _context.MeetingMinutesMasters.Add(master);
-            await _context.SaveChangesAsync();
-
-            return Ok(new { message = "Meeting Minutes saved successfully", masterId = master.MasterId });
+            return Ok(new { message = "Meeting Minutes saved successfully", masterId });
         }
+
     }
 }
