@@ -15,6 +15,24 @@
             --border-color: #dee2e6;
         }
 
+
+        .customer-type-card {
+            display: inline-block;
+            padding: 10px 18px;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            background-color: #fff;
+            color: #333;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        input[type="radio"]:checked + .customer-type-card {
+            border-color: #007bff;
+            background-color: #e9f2ff;
+            box-shadow: 0 0 8px rgba(0,123,255,0.4);
+        }
+
         body {
             background-color: #f5f7f9;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -165,100 +183,97 @@
                 <h3 class="section-title mb-0">Meeting Information</h3>
             </div>
             
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <div class="d-flex">
-                            <div class="customer-type-card card flex-fill me-3 p-3 text-center selected" data-type="Corporate">
-                                <h5><i class="fas fa-building me-2"></i>Corporate</h5>
-                                <p class="mb-0">Business customers</p>
-                            </div>
-                            <div class="customer-type-card card flex-fill ms-3 p-3 text-center" data-type="Individual">
-                                <h5><i class="fas fa-user me-2"></i>Individual</h5>
-                                <p class="mb-0">Personal customers</p>
-                            </div>
-                        </div>
-                    </div>
-               
-
-                <div class="row">
-
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="customer-type-card  selected" data-type="Corporate">
+                        <h5><i class=" me-2"></i>Corporate</h5>
                    
+                </div>
+                
+                <div class="customer-type-card   " data-type="Individual">
+                    <h5><i class=" me-2"></i>Individual</h5>
+                </div>
+            </div>
 
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label required-label">Customer Name</label>
-                            <select id="customerSelect" class="form-select" required>
-                                <option value="" selected disabled>Select customer name</option>
-                                <!-- Customer options will be loaded dynamically -->
-                            </select>
+                
+
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label required-label">Customer Name</label>
+                                <select id="customerSelect" class="form-select" required>
+                                    <option value="" selected disabled>Select customer name</option>
+                                    <!-- Customer options will be loaded dynamically -->
+                                </select>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-md-3">
-                        <div class="mb-3">
-                            <label class="form-label required-label">Date</label>
-                            <input type="date" id="meetingDate" class="form-control" required>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label required-label">Date</label>
+                                <input type="date" id="meetingDate" class="form-control" required>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-md-3">
-                        <div class="mb-3">
-                            <label class="form-label required-label">Time</label>
-                            <input type="time" id="meetingTime" class="form-control" required>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label required-label">Time</label>
+                                <input type="time" id="meetingTime" class="form-control" required>
+                            </div>
                         </div>
-                    </div>
 
 
 
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label required-label">Meeting Place</label>
-                            <input type="text" id="meetingPlace" class="form-control" placeholder="Enter meeting place" required>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label required-label">Meeting Place</label>
+                                <input type="text" id="meetingPlace" class="form-control" placeholder="Enter meeting place" required>
+                            </div>
                         </div>
-                    </div>
 
 
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label required-label">Meeting Agenda</label>
-                            <textarea id="meetingAgenda" class="form-control" placeholder="Enter meeting agenda" required></textarea>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label required-label">Meeting Agenda</label>
+                                <textarea id="meetingAgenda" class="form-control" placeholder="Enter meeting agenda" required></textarea>
+                            </div>
                         </div>
-                    </div>
 
 
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label required-label">Meeting Discussion</label>
-                            <textarea id="meetingDiscussion" class="form-control" placeholder="Enter meeting discussion" required></textarea>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label required-label">Meeting Discussion</label>
+                                <textarea id="meetingDiscussion" class="form-control" placeholder="Enter meeting discussion" required></textarea>
+                            </div>
                         </div>
-                    </div>
 
 
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label required-label">Meeting Decision</label>
-                            <textarea id="meetingDecision" class="form-control" placeholder="Enter meeting decisions" required></textarea>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label required-label">Meeting Decision</label>
+                                <textarea id="meetingDecision" class="form-control" placeholder="Enter meeting decisions" required></textarea>
+                            </div>
                         </div>
-                    </div>
 
 
 
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label required-label">Attends From Client Side</label>
-                            <textarea id="attendsFromClient" class="form-control" placeholder="Enter client attendees" required></textarea>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label required-label">Attends From Client Side</label>
+                                <textarea id="attendsFromClient" class="form-control" placeholder="Enter client attendees" required></textarea>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label required-label">Attends From Host Side</label>
-                            <textarea id="attendsFromHost" class="form-control" placeholder="Enter host attendees" required></textarea>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label required-label">Attends From Host Side</label>
+                                <textarea id="attendsFromHost" class="form-control" placeholder="Enter host attendees" required></textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-       </div>
 
 
 
@@ -296,9 +311,7 @@
                         <button id="addProductBtn" class="btn btn-success ">
                             <i class="fas fa-plus me-2"></i>Add
                         </button>
-                    </div>
-
-                    
+                    </div>           
                 </div>
 
                 <div class="mt-4">
@@ -416,15 +429,10 @@
                 const endpoint = currentCustomerType === 'Corporate'
                     ? '/api/customer/corporate'
                     : '/api/customer/individual';
-
-
                 const response = await fetch(endpoint);
-                
-
-
                 if (!response.ok) {
 
-                //    throw new Error('Failed to fetch customers');
+                    throw new Error('Failed to fetch customers');
                 }
 
                 const customers = await response.json();
