@@ -1,0 +1,702 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Minutes Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #1abc9c;
+            --light-bg: #f8f9fa;
+            --border-color: #dee2e6;
+        }
+
+        body {
+            background-color: #f5f7f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+        }
+
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: none;
+            transition: transform 0.3s ease;
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+            }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), #1a2530);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .section-title {
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .required-label:after {
+            content: " *";
+            color: #e74c3c;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+
+            .btn-primary:hover {
+                background-color: #2980b9;
+                border-color: #2980b9;
+            }
+
+        .btn-success {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+            .btn-success:hover {
+                background-color: #16a085;
+                border-color: #16a085;
+            }
+
+        .table thead {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(26, 188, 156, 0.1);
+        }
+
+        .action-buttons .btn {
+            padding: 5px 10px;
+            margin-right: 5px;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.25rem rgba(26, 188, 156, 0.25);
+        }
+
+        .form-check-input:checked {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            max-width: 350px;
+            display: none;
+        }
+
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 0;
+            margin-top: 40px;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .empty-table-message {
+            text-align: center;
+            padding: 30px;
+            color: #6c757d;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .customer-type-card {
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+            .customer-type-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .customer-type-card.selected {
+                border-color: var(--accent-color);
+                background-color: rgba(26, 188, 156, 0.05);
+            }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="row align-items-center">
+               
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Today: <span id="currentDate"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="notification">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <span class="notification-message"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header bg-white">
+                <h3 class="section-title mb-0">Meeting Information</h3>
+            </div>
+            
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="d-flex">
+                            <div class="customer-type-card card flex-fill me-3 p-3 text-center selected" data-type="Corporate">
+                                <h5><i class="fas fa-building me-2"></i>Corporate</h5>
+                                <p class="mb-0">Business customers</p>
+                            </div>
+                            <div class="customer-type-card card flex-fill ms-3 p-3 text-center" data-type="Individual">
+                                <h5><i class="fas fa-user me-2"></i>Individual</h5>
+                                <p class="mb-0">Personal customers</p>
+                            </div>
+                        </div>
+                    </div>
+               
+
+                <div class="row">
+
+                   
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label required-label">Customer Name</label>
+                            <select id="customerSelect" class="form-select" required>
+                                <option value="" selected disabled>Select customer name</option>
+                                <!-- Customer options will be loaded dynamically -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label class="form-label required-label">Date</label>
+                            <input type="date" id="meetingDate" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label class="form-label required-label">Time</label>
+                            <input type="time" id="meetingTime" class="form-control" required>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label required-label">Meeting Place</label>
+                            <input type="text" id="meetingPlace" class="form-control" placeholder="Enter meeting place" required>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label required-label">Meeting Agenda</label>
+                            <textarea id="meetingAgenda" class="form-control" placeholder="Enter meeting agenda" required></textarea>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label required-label">Meeting Discussion</label>
+                            <textarea id="meetingDiscussion" class="form-control" placeholder="Enter meeting discussion" required></textarea>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label required-label">Meeting Decision</label>
+                            <textarea id="meetingDecision" class="form-control" placeholder="Enter meeting decisions" required></textarea>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label required-label">Attends From Client Side</label>
+                            <textarea id="attendsFromClient" class="form-control" placeholder="Enter client attendees" required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label required-label">Attends From Host Side</label>
+                            <textarea id="attendsFromHost" class="form-control" placeholder="Enter host attendees" required></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+       </div>
+
+
+
+        <div class="card mb-4">
+            <div class="card-header bg-white">
+                <h3 class="section-title mb-0">Products/Services</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="mb-3">
+                            <label class="form-label required-label">Product/Service</label>
+                            <select id="productSelect" class="form-select" required>
+                                <option value="" selected disabled>Select product/service</option>
+                                <!-- Product options will be loaded dynamically -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label class="form-label">Unit</label>
+                            <input type="text" id="productUnit" class="form-control" readonly>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label class="form-label required-label">Quantity</label>
+                            <input type="number" id="productQuantity" class="form-control" min="1" value="1" required>
+                        </div>
+                    </div>
+
+                    <div class="d-flex  mb-5">
+                        <button id="addProductBtn" class="btn btn-success ">
+                            <i class="fas fa-plus me-2"></i>Add
+                        </button>
+                    </div>
+
+                    
+                </div>
+
+                <div class="mt-4">
+                    <h5 class="mb-3">Added Products/Services</h5>
+                    <div id="productsTableContainer">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>SL</th>
+                                    <th>Product/Service Name</th>
+                                    <th>Quantity</th>
+                                    <th>Unit</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsTableBody">
+                                <!-- Table rows will be added dynamically -->
+                            </tbody>
+                        </table>
+                        <div id="emptyTableMessage" class="empty-table-message">
+                            <i class="fas fa-box-open fa-3x mb-3"></i>
+                            <h4>No Products Added</h4>
+                            <p class="text-muted">Add products/services using the form above</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex  mb-5">
+            <button id="saveBtn" class="btn btn-primary btn-lg px-5">
+                <i class="fas fa-save me-2"></i>Save Meeting Minutes
+            </button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container text-center">
+            <p class="mb-0">Meeting Minutes Management System &copy; 2023</p>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Set current date
+        const now = new Date();
+        document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        // Set default date and time
+        document.getElementById('meetingDate').valueAsDate = now;
+        document.getElementById('meetingTime').value = "09:00";
+
+        // Initialize data
+        let products = [];
+        let corporateCustomers = [];
+        let individualCustomers = [];
+        let selectedProducts = [];
+        let currentCustomerType = "Corporate";
+
+        // DOM Elements
+        const customerSelect = document.getElementById('customerSelect');
+        const productSelect = document.getElementById('productSelect');
+        const productUnit = document.getElementById('productUnit');
+        const productsTableBody = document.getElementById('productsTableBody');
+        const emptyTableMessage = document.getElementById('emptyTableMessage');
+        const notification = document.querySelector('.notification');
+        const notificationMessage = document.querySelector('.notification-message');
+
+        // Customer type selection
+        document.querySelectorAll('.customer-type-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.customer-type-card').forEach(c => {
+                    c.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                currentCustomerType = this.dataset.type;
+                loadCustomers();
+            });
+        });
+
+        // Load products
+        async function loadProducts() {
+            try {
+                const response = await fetch('/api/productservice');
+                if (!response.ok) throw new Error('Failed to fetch products');
+
+                products = await response.json();
+                updateProductDropdown();
+            } catch (error) {
+                showNotification('Error loading products: ' + error.message, 'danger');
+            }
+        }
+
+        // Update product dropdown
+        function updateProductDropdown() {
+            productSelect.innerHTML = '<option value="" selected disabled>Select product/service</option>';
+            products.forEach(product => {
+                const option = document.createElement('option');
+                option.value = product.id;
+                option.textContent = product.name;
+                option.dataset.unit = product.unit;
+                productSelect.appendChild(option);
+            });
+        }
+
+        // Load customers based on type
+        async function loadCustomers() {
+            try {
+                const endpoint = currentCustomerType === 'Corporate'
+                    ? '/api/customer/corporate'
+                    : '/api/customer/individual';
+
+
+                const response = await fetch(endpoint);
+                
+
+
+                if (!response.ok) {
+
+                //    throw new Error('Failed to fetch customers');
+                }
+
+                const customers = await response.json();
+                updateCustomerDropdown(customers);
+            } catch (error) {
+                showNotification('Error loading customers: ' + error.message, 'danger');
+            }
+        }
+
+        // Update customer dropdown
+        function updateCustomerDropdown(customers) {
+            customerSelect.innerHTML = '<option value="" selected disabled>Select customer name</option>';
+            customers.forEach(customer => {
+                const option = document.createElement('option');
+                option.value = customer.id;
+                option.textContent = customer.name;
+                customerSelect.appendChild(option);
+            });
+        }
+
+        // Handle product selection
+        productSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            productUnit.value = selectedOption.dataset.unit || '';
+        });
+
+        // Add product to table
+        document.getElementById('addProductBtn').addEventListener('click', function() {
+            const productId = productSelect.value;
+            const productName = productSelect.options[productSelect.selectedIndex].text;
+            const quantity = document.getElementById('productQuantity').value;
+            const unit = productUnit.value;
+
+            if (!productId) {
+                showNotification('Please select a product/service', 'warning');
+                return;
+            }
+
+            if (!quantity || quantity <= 0) {
+                showNotification('Please enter a valid quantity', 'warning');
+                return;
+            }
+
+            // Add product to selected products
+            selectedProducts.push({
+                id: productId,
+                name: productName,
+                quantity: parseInt(quantity),
+                unit: unit
+            });
+
+            updateProductsTable();
+
+            // Reset form
+            productSelect.value = '';
+            productUnit.value = '';
+            document.getElementById('productQuantity').value = '1';
+        });
+
+        // Update products table
+        function updateProductsTable() {
+            productsTableBody.innerHTML = '';
+
+            if (selectedProducts.length === 0) {
+                emptyTableMessage.style.display = 'block';
+                return;
+            }
+
+            emptyTableMessage.style.display = 'none';
+
+            selectedProducts.forEach((product, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${product.name}</td>
+                    <td>${product.quantity}</td>
+                    <td>${product.unit}</td>
+                    <td class="action-buttons">
+                        <button class="btn btn-sm btn-warning edit-btn" data-index="${index}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger delete-btn" data-index="${index}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                productsTableBody.appendChild(row);
+            });
+
+            // Add event listeners for edit and delete buttons
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.dataset.index);
+                    editProduct(index);
+                });
+            });
+
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.dataset.index);
+                    deleteProduct(index);
+                });
+            });
+        }
+
+        // Edit product
+        function editProduct(index) {
+            const product = selectedProducts[index];
+
+            // Set form values
+            productSelect.value = product.id;
+            productUnit.value = product.unit;
+            document.getElementById('productQuantity').value = product.quantity;
+
+            // Remove the product from the list
+            selectedProducts.splice(index, 1);
+
+            // Update table
+            updateProductsTable();
+
+            showNotification('Product ready for editing', 'info');
+        }
+
+        // Delete product
+        function deleteProduct(index) {
+            selectedProducts.splice(index, 1);
+            updateProductsTable();
+            showNotification('Product removed', 'info');
+        }
+
+        // Save meeting minutes
+        document.getElementById('saveBtn').addEventListener('click', async function() {
+            // Validate form
+            if (!validateForm()) return;
+
+            // Prepare data
+            const meetingData = {
+                customerType: currentCustomerType,
+                customerId: customerSelect.value,
+                date: document.getElementById('meetingDate').value,
+                time: formatTime(document.getElementById('meetingTime').value),
+                meetingPlace: document.getElementById('meetingPlace').value,
+                attendsFromClient: document.getElementById('attendsFromClient').value,
+                attendsFromHost: document.getElementById('attendsFromHost').value,
+                meetingAgenda: document.getElementById('meetingAgenda').value,
+                meetingDiscussion: document.getElementById('meetingDiscussion').value,
+                meetingDecision: document.getElementById('meetingDecision').value,
+                details: selectedProducts.map(product => ({
+                    productId: product.id,
+                    quantity: product.quantity
+                }))
+            };
+
+            try {
+                const response = await fetch('/api/meetingminutes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(meetingData)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Failed to save meeting minutes');
+                }
+
+                const result = await response.json();
+                showNotification('Meeting minutes saved successfully! Master ID: ' + result.masterId, 'success');
+
+                // Reset form
+                resetForm();
+
+            } catch (error) {
+                showNotification('Error: ' + error.message, 'danger');
+            }
+        });
+
+        // Format time to 12-hour format
+        function formatTime(time) {
+            const [hours, minutes] = time.split(':');
+            let h = parseInt(hours);
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            h = h % 12;
+            h = h ? h : 12; // the hour '0' should be '12'
+            return `${h}:${minutes} ${ampm}`;
+        }
+
+        // Validate form
+        function validateForm() {
+            let isValid = true;
+            const requiredFields = [
+                'customerSelect', 'meetingDate', 'meetingTime', 'meetingPlace',
+                'attendsFromClient', 'attendsFromHost', 'meetingAgenda',
+                'meetingDiscussion', 'meetingDecision'
+            ];
+
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    field.classList.remove('is-invalid');
+                }
+            });
+
+            if (selectedProducts.length === 0) {
+                showNotification('Please add at least one product/service', 'warning');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        // Reset form
+        function resetForm() {
+            document.querySelectorAll('input, textarea, select').forEach(element => {
+                if (element.id !== 'meetingDate' && element.id !== 'meetingTime') {
+                    element.value = '';
+                }
+            });
+
+            // Reset date and time
+            document.getElementById('meetingDate').valueAsDate = new Date();
+            document.getElementById('meetingTime').value = "09:00";
+
+            // Reset customer type to Corporate
+            document.querySelectorAll('.customer-type-card').forEach((card, index) => {
+                if (index === 0) {
+                    card.classList.add('selected');
+                } else {
+                    card.classList.remove('selected');
+                }
+            });
+            currentCustomerType = "Corporate";
+
+            // Reset products
+            selectedProducts = [];
+            updateProductsTable();
+
+            // Reload customers
+            loadCustomers();
+        }
+
+        // Show notification
+        function showNotification(message, type) {
+            const alert = notification.querySelector('.alert');
+            alert.className = `alert alert-${type} alert-dismissible fade show`;
+            notificationMessage.textContent = message;
+            notification.style.display = 'block';
+
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 5000);
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProducts();
+            loadCustomers();
+
+            // Remove invalid class when user starts typing
+            document.querySelectorAll('input, textarea, select').forEach(element => {
+                element.addEventListener('input', function() {
+                    if (this.value.trim()) {
+                        this.classList.remove('is-invalid');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

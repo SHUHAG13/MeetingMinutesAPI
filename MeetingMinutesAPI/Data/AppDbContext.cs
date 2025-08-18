@@ -16,9 +16,9 @@ namespace MeetingMinutesAPI.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CorporateCustomer>().HasData(
-               new CorporateCustomer { CorporateId = 1, CorporateName = "Shuhag" },
-               new CorporateCustomer { CorporateId = 2, CorporateName = "Nihal" },
-               new CorporateCustomer { CorporateId = 3, CorporateName = "Imran" }
+               new CorporateCustomer { CorporateId = 1, Name = "Shuhag" },
+               new CorporateCustomer { CorporateId = 2, Name = "Nihal" },
+               new CorporateCustomer { CorporateId = 3, Name = "Imran" }
            );
             modelBuilder.Entity<IndividualCustomer>().HasData(
                 new IndividualCustomer { IndividualId = 1, Name = "John Doe" },
@@ -26,9 +26,9 @@ namespace MeetingMinutesAPI.Data
                 new IndividualCustomer { IndividualId = 3, Name = "Alice Johnson" }
             );
             modelBuilder.Entity<ProductService>().HasData(
-                 new ProductService { ProductId = 1, ProductName = "Product A", Unit = "kg" },
-                 new ProductService { ProductId = 2, ProductName = "Product B", Unit = "pcs" },
-                 new ProductService { ProductId = 3, ProductName = "Service C", Unit = "hour" }
+                 new ProductService { ProductId = 1, Name = "Product A", Unit = "kg" },
+                 new ProductService { ProductId = 2, Name = "Product B", Unit = "pcs" },
+                 new ProductService { ProductId = 3, Name = "Service C", Unit = "hour" }
              );
 
 

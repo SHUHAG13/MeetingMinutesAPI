@@ -8,6 +8,6 @@ namespace MeetingMinutesAPI.Models.Entities
         public int CorporateId { get; set; }
 
         [Required, StringLength(150)]
-        public string CorporateName { get; set; }
+        public string Name { get; set; }
     }
 }

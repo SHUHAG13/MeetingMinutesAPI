@@ -4,6 +4,7 @@ using MeetingMinutesAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MeetingMinutesAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250818074305_updateCorporateTable")]
+    partial class updateCorporateTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -189,7 +192,7 @@ namespace MeetingMinutesAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("ProductName")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
@@ -207,19 +210,19 @@ namespace MeetingMinutesAPI.Migrations
                         new
                         {
                             ProductId = 1,
-                            Name = "Product A",
+                            ProductName = "Product A",
                             Unit = "kg"
                         },
                         new
                         {
                             ProductId = 2,
-                            Name = "Product B",
+                            ProductName = "Product B",
                             Unit = "pcs"
                         },
                         new
                         {
                             ProductId = 3,
-                            Name = "Service C",
+                            ProductName = "Service C",
                             Unit = "hour"
                         });
                 });

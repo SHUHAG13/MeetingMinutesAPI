@@ -23,6 +23,8 @@ namespace MeetingMinutesAPI.Controllers
         [HttpGet("corporate")]
         public async Task<IActionResult> GetCorporateCustomers()
         {
+            Console.WriteLine("Fetching corporate SOhag...");
+
             var corporates = await _repository.GetCorporateCustomersAsync();
             return Ok(corporates);
         }
@@ -33,6 +35,7 @@ namespace MeetingMinutesAPI.Controllers
         [HttpGet("individual")]
         public async Task<IActionResult> GetIndividualCustomers()
         {
+
             var individuals = await _repository.GetIndividualCustomersAsync();
             return Ok(individuals);
         }
