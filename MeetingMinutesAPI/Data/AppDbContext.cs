@@ -15,13 +15,31 @@ namespace MeetingMinutesAPI.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<CorporateCustomer>().HasData(
+               new CorporateCustomer { CorporateId = 1, CorporateName = "Shuhag" },
+               new CorporateCustomer { CorporateId = 2, CorporateName = "Nihal" },
+               new CorporateCustomer { CorporateId = 3, CorporateName = "Imran" }
+           );
+            modelBuilder.Entity<IndividualCustomer>().HasData(
+                new IndividualCustomer { IndividualId = 1, Name = "John Doe" },
+                new IndividualCustomer { IndividualId = 2, Name = "Jane Smith" },
+                new IndividualCustomer { IndividualId = 3, Name = "Alice Johnson" }
+            );
+            modelBuilder.Entity<ProductService>().HasData(
+                 new ProductService { ProductId = 1, ProductName = "Product A", Unit = "kg" },
+                 new ProductService { ProductId = 2, ProductName = "Product B", Unit = "pcs" },
+                 new ProductService { ProductId = 3, ProductName = "Service C", Unit = "hour" }
+             );
+
 
             modelBuilder.Entity<MeetingMinutesDetails>()
                .HasOne(d => d.Master)
                .WithMany(m => m.Details)
                .HasForeignKey(d => d.MasterId);
 
+
             base.OnModelCreating(modelBuilder);
+           
         }
     }
 }
